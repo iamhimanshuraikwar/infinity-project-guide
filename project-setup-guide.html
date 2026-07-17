@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinity — Project Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.7;color:#111;background:#fff}
+::selection{background:#111;color:#fff}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px}
+a{color:inherit;text-decoration:none}
+
+:root{
+  --g50:#fafafa;--g100:#f5f5f5;--g200:#e5e5e5;--g300:#d4d4d4;
+  --g400:#a3a3a3;--g500:#737373;--g600:#525252;--g800:#262626;--g900:#111;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
+  --xs:8px;--sm:12px;--md:16px;--lg:24px;--xl:40px;--2xl:64px;--3xl:96px;--4xl:128px;
+}
+
+/* Layout */
+.layout{display:flex;min-height:100vh}
+
+/* Sidebar */
+.sidebar{width:240px;flex-shrink:0;position:sticky;top:0;height:100vh;border-right:1px solid var(--g200);background:#fff;display:flex;flex-direction:column;overflow-y:auto;padding:var(--xl) 0}
+.sidebar-brand{padding:0 var(--lg);margin-bottom:var(--xl);display:flex;align-items:center;gap:var(--sm)}
+.sidebar-brand svg{width:20px;height:12px;flex-shrink:0}
+.sidebar-brand span{font-size:13px;font-weight:600;color:var(--g900)}
+.sidebar-group{margin-bottom:var(--lg)}
+.sidebar-group-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--g400);padding:0 var(--lg);margin-bottom:var(--xs)}
+.sidebar-link{display:block;padding:5px var(--lg);font-size:13px;color:var(--g500);transition:all 100ms;border-left:2px solid transparent}
+.sidebar-link:hover{color:var(--g900);background:var(--g50)}
+.sidebar-link.active{color:var(--g900);border-left-color:var(--g900);font-weight:500}
+.sidebar-link.sub{padding-left:32px;font-size:12px;color:var(--g400)}
+.sidebar-footer{margin-top:auto;padding:var(--lg);border-top:1px solid var(--g100);font-size:11px;color:var(--g400)}
+
+/* Main */
+.main{flex:1;min-width:0;max-width:780px;padding:var(--4xl) var(--3xl)}
+
+/* Hero */
+.hero{margin-bottom:var(--4xl)}
+.hero h1{font-size:clamp(32px,4vw,42px);font-weight:700;letter-spacing:-0.04em;line-height:1.15;margin-bottom:var(--sm);color:var(--g900)}
+.hero p{font-size:16px;color:var(--g500);max-width:520px;line-height:1.6}
+
+/* Sections */
+.section{margin-bottom:var(--4xl)}
+.section-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--g400);margin-bottom:var(--xs)}
+.section h2{font-size:26px;font-weight:700;letter-spacing:-0.03em;margin-bottom:var(--sm);color:var(--g900)}
+.section>p{color:var(--g500);font-size:15px;margin-bottom:var(--xl);max-width:560px}
+
+/* Subsection */
+.subsection{margin-bottom:var(--2xl)}
+.subsection h3{font-size:19px;font-weight:700;letter-spacing:-0.02em;margin-bottom:var(--sm);color:var(--g900)}
+.subsection h4{font-size:15px;font-weight:600;margin-bottom:var(--xs);margin-top:var(--lg);color:var(--g900)}
+.subsection p{color:var(--g600);margin-bottom:var(--md)}
+.subsection ul,.subsection ol{color:var(--g600);margin-bottom:var(--md);padding-left:20px}
+.subsection li{margin-bottom:6px}
+.subsection li strong{color:var(--g900)}
+
+/* Divider */
+.divider{height:1px;background:var(--g200);margin:var(--3xl) 0}
+
+/* Code */
+code{font-family:var(--mono);font-size:13px;background:var(--g100);padding:2px 6px;border-radius:4px;color:var(--g800)}
+pre{font-family:var(--mono);font-size:13px;line-height:1.8;background:var(--g900);color:#e5e5e5;padding:var(--lg) var(--xl);border-radius:8px;overflow-x:auto;margin:var(--md) 0 var(--lg);white-space:pre;position:relative}
+pre .c{color:var(--g500)}pre .k{color:#e879f9}pre .s{color:#86efac}pre .fn{color:#93c5fd}
+
+/* Copy button */
+.copy-btn{position:absolute;top:var(--sm);right:var(--sm);background:var(--g800);border:1px solid var(--g600);color:var(--g400);font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:5px;cursor:pointer;opacity:0;transition:opacity 150ms,background 150ms;display:flex;align-items:center;gap:5px}
+pre:hover .copy-btn{opacity:1}
+.copy-btn:hover{background:var(--g600);color:#fff}
+.copy-btn.copied{color:#86efac;border-color:#86efac}
+
+/* Cards */
+.cards{display:grid;gap:var(--md)}
+.cards-2{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--g50);border:1px solid var(--g200);border-radius:8px;padding:var(--lg)}
+.card h4{font-size:14px;font-weight:600;margin-bottom:4px;color:var(--g900)}
+.card p{font-size:13px;color:var(--g500);margin:0}
+.card code{font-size:12px}
+
+/* Steps */
+.step{display:flex;gap:var(--md);margin-bottom:var(--xl)}
+.step:last-child{margin-bottom:0}
+.step-n{width:24px;height:24px;border-radius:50%;background:var(--g900);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px}
+.step-b{flex:1}
+.step-b strong{display:block;font-size:14px;font-weight:600;margin-bottom:2px}
+.step-b p{margin:0;font-size:14px;color:var(--g600)}
+
+/* Callout */
+.callout{background:var(--g50);border:1px solid var(--g200);border-radius:8px;padding:var(--lg);margin:var(--lg) 0}
+.callout h5{font-size:13px;font-weight:600;margin-bottom:4px}
+.callout p{font-size:13px;color:var(--g500);margin:0}
+
+/* Table */
+.table{width:100%;border-collapse:collapse;font-size:13px;margin:var(--md) 0}
+.table th{text-align:left;padding:var(--xs) var(--sm);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--g400);border-bottom:1px solid var(--g200)}
+.table td{padding:var(--xs) var(--sm);border-bottom:1px solid var(--g100);color:var(--g600)}
+.table tr:last-child td{border-bottom:none}
+.table td code{font-size:12px}
+
+/* Prompt box */
+.prompt-box{background:var(--g900);border-radius:8px;padding:var(--lg) var(--xl);margin:var(--lg) 0;position:relative}
+.prompt-box::before{content:'Prompt';position:absolute;top:var(--sm);right:var(--sm);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--g500)}
+.prompt-box pre{background:none;padding:0;margin:0;border:none;color:#e5e5e5}
+
+/* File tree */
+.tree{font-family:var(--mono);font-size:13px;line-height:1.9;color:var(--g500);margin:var(--md) 0;white-space:pre;display:block;background:var(--g100);padding:var(--lg) var(--xl);border-radius:8px}
+.tree .d{color:var(--g900);font-weight:500}
+
+/* Flow */
+.flow{display:flex;align-items:center;gap:var(--xs);flex-wrap:wrap;margin:var(--lg) 0}
+.flow span{padding:6px 14px;border:1px solid var(--g200);border-radius:6px;font-size:13px;font-weight:500;background:#fff}
+.flow .hl{background:var(--g900);color:#fff;border-color:var(--g900)}
+.flow em{font-style:normal;color:var(--g400);font-size:18px}
+
+/* Mobile */
+.sidebar-toggle{display:none;position:fixed;bottom:var(--lg);right:var(--lg);width:44px;height:44px;border-radius:50%;background:var(--g900);color:#fff;border:none;cursor:pointer;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,.15);align-items:center;justify-content:center}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:90}
+@media(max-width:860px){
+  .sidebar{position:fixed;top:0;left:0;bottom:0;z-index:95;transform:translateX(-100%);transition:transform 200ms ease;width:260px}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-toggle{display:flex}
+  .sidebar-overlay.open{display:block}
+  .main{padding:var(--3xl) var(--lg) var(--2xl)}
+  .cards-2{grid-template-columns:1fr}
+}
+@media(max-width:480px){.main{padding:var(--xl) var(--md) var(--2xl)}pre{padding:var(--md);font-size:12px}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- SIDEBAR                                                       -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg"><path d="M 28 30 C 28 14,50 14,50 30 C 50 46,72 46,72 30 C 72 14,50 14,50 30 C 50 46,28 46,28 30 Z" fill="none" stroke="#111" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Infinity Guide</span>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Start Here</div>
+    <a href="#overview" class="sidebar-link active">Overview</a>
+    <a href="#stack" class="sidebar-link">Technology Stack</a>
+    <a href="#install" class="sidebar-link">Install Prerequisites</a>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Build UI First</div>
+    <a href="#create-nextjs" class="sidebar-link">Create Next.js App</a>
+    <a href="#shadcn" class="sidebar-link">Install shadcn/ui</a>
+    <a href="#folder" class="sidebar-link">Folder Structure</a>
+    <a href="#pages" class="sidebar-link">Build Pages</a>
+    <a href="#components" class="sidebar-link">Build Components</a>
+    <a href="#styling" class="sidebar-link">Styling &amp; Tokens</a>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Add Backend</div>
+    <a href="#github" class="sidebar-link">GitHub Repo</a>
+    <a href="#supabase" class="sidebar-link">Supabase (DB + Auth)</a>
+    <a href="#gcp" class="sidebar-link">Google OAuth</a>
+    <a href="#stripe" class="sidebar-link">Stripe (Payments)</a>
+    <a href="#env" class="sidebar-link">Environment Variables</a>
+    <a href="#auth" class="sidebar-link">Authentication</a>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Deploy</div>
+    <a href="#cloudflare" class="sidebar-link">Cloudflare DNS</a>
+    <a href="#vercel" class="sidebar-link">Vercel Hosting</a>
+    <a href="#deploy" class="sidebar-link">Deploy to Production</a>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">AI &amp; Tools</div>
+    <a href="#ai-tools" class="sidebar-link">AI Dev Tools</a>
+    <a href="#mcp" class="sidebar-link">MCP Servers</a>
+    <a href="#mcp-ctx7" class="sidebar-link sub">Context7</a>
+    <a href="#skills" class="sidebar-link">Skills</a>
+    <a href="#rules" class="sidebar-link">Rules</a>
+    <a href="#prompts" class="sidebar-link">AI Prompts</a>
+  </div>
+
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Reference</div>
+    <a href="#before" class="sidebar-link">Before You Build</a>
+    <a href="#commands" class="sidebar-link">Commands</a>
+    <a href="#troubleshooting" class="sidebar-link">Troubleshooting</a>
+  </div>
+
+  <div class="sidebar-footer">Last updated Jul 2026</div>
+</nav>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle nav">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- MAIN                                                          -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<main class="main">
+
+<header class="hero" id="overview">
+  <h1>Build from Zero</h1>
+  <p>A complete guide to setting up, building, and deploying the Infinity application with authentication.</p>
+</header>
+
+
+<!-- ────────────────────────────────────────────────────────────── -->
+<!-- 01: OVERVIEW                                                  -->
+<!-- ────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="section-label">01 &mdash; Overview</div>
+  <h2>What You Are Building</h2>
+  <p>A Next.js application with Supabase authentication, Google OAuth, Stripe payments, and protected routes — deployed on Vercel behind Cloudflare.</p>
+
+  <div class="callout">
+    <h5>How this guide works</h5>
+    <p>We build in three layers: <strong>UI first</strong> (see something on screen), then <strong>backend</strong> (data, auth, payments), then <strong>deploy</strong> (live on the internet). This way you always have something working.</p>
+  </div>
+
+  <div class="subsection" style="margin-top:var(--xl)">
+    <h4>The Flow</h4>
+    <div class="flow">
+      <span>Install tools</span><em>&rarr;</em>
+      <span class="hl">Create Next.js app</span><em>&rarr;</em>
+      <span class="hl">Build UI pages</span><em>&rarr;</em>
+      <span>Connect backend</span><em>&rarr;</em>
+      <span class="hl">Deploy</span>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Architecture</h4>
+    <div class="flow">
+      <span>User</span><em>&rarr;</em>
+      <span class="hl">Cloudflare</span><em>&rarr;</em>
+      <span class="hl">Vercel</span><em>&rarr;</em>
+      <span>Supabase</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────────────── -->
+<!-- 02: STACK                                                     -->
+<!-- ────────────────────────────────────────────────────────────── -->
+<div class="divider"></div>
+<section class="section" id="stack">
+  <div class="section-label">02 &mdash; Foundation</div>
+  <h2>Technology Stack</h2>
+  <p>Every tool in the stack and why it exists.</p>
+
+  <div class="cards cards-2" style="margin-top:var(--xl)">
+    <div class="card"><h4>Next.js</h4><p>React framework. File-based routing, server components, API routes. App Router.</p></div>
+    <div class="card"><h4>shadcn/ui</h4><p>Copy-paste UI components on Radix + Tailwind. You own the code.</p></div>
+    <div class="card"><h4>Supabase</h4><p>PostgreSQL, auto-generated APIs, auth, row-level security.</p></div>
+    <div class="card"><h4>Vercel</h4><p>Hosting. Push to GitHub, auto-deploy. SSL and CDN included.</p></div>
+    <div class="card"><h4>Cloudflare</h4><p>DNS, CDN, WAF, DDoS protection. Traffic passes through first.</p></div>
+    <div class="card"><h4>Stripe</h4><p>Payments and subscriptions. Start in sandbox mode.</p></div>
+    <div class="card"><h4>Google Cloud</h4><p>OAuth 2.0 for "Sign in with Google".</p></div>
+    <div class="card"><h4>GitHub</h4><p>Private repo. Source control and deployment triggers.</p></div>
+    <div class="card"><h4>Lucide</h4><p>Beautiful, consistent icon set. Tree-shakeable React components.</p></div>
+  </div>
+</section>
+
+
+<!-- ────────────────────────────────────────────────────────────── -->
+<!-- 03: INSTALL                                                   -->
+<!-- ────────────────────────────────────────────────────────────── -->
+<div class="divider"></div>
+<section class="section" id="install">
+  <div class="section-label">03 &mdash; Setup</div>
+  <h2>Install Prerequisites</h2>
+  <p>Starting from a fresh machine. Install these three things first.</p>
+
+  <div class="subsection">
+    <h3>Node.js &amp; npm</h3>
+    <p>Download the <strong>LTS version</strong> from <code>nodejs.org</code>. npm comes bundled.</p>
+    <pre><span class="c"># Verify</span>
+node --version    <span class="c"># v18+ or v20+</span>
+npm --version     <span class="c"># 9+ or 10+</span></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Git</h3>
+    <p>Download from <code>git-scm.com</code>. Install with defaults.</p>
+    <pre>git config --global user.name <span class="s">"Your Name"</span>
+git config --global user.email <span class="s">"you@email.com"</span></pre>
+  </div>
+
+  <div class="subsection">
+    <h3>VS Code</h3>
+    <p>Download from <code>code.visualstudio.com</code>. Install: Prettier, ESLint, Tailwind IntelliSense, GitLens.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- BUILD UI FIRST                                                -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="divider"></div>
+<section class="section" id="create-nextjs">
+  <div class="section-label">04 &mdash; Build UI First</div>
+  <h2>Create the Next.js App</h2>
+  <p>No backend yet. Just get a working app on your screen.</p>
+
+  <div class="subsection">
+    <h3>Initialize the Project</h3>
+    <p>Create a new folder and run:</p>
+    <pre>npx create-next-app@latest my-app --typescript --tailwind --eslint --app --src-dir --import-alias <span class="s">"@/*"</span> --use-npm</pre>
+    <p>This gives you TypeScript, Tailwind, ESLint, and the App Router. Test it:</p>
+    <pre><span class="c"># Move into the project</span>
+cd my-app
+
+<span class="c"># Start dev server</span>
+npm run dev
+
+<span class="c"># Open http://localhost:3000</span>
+<span class="c"># You should see the Next.js welcome page</span></pre>
+  </div>
+
+  <div class="subsection" id="shadcn">
+    <h3>Install shadcn/ui</h3>
+    <p>Follow the official setup: <code>ui.shadcn.com/create</code></p>
+    <pre>npx shadcn@latest init</pre>
+    <p>When prompted: TypeScript, Default style, Slate color, CSS variables: Yes.</p>
+    <p>Add components as you need them:</p>
+    <pre>npx shadcn@latest add button card input label</pre>
+    <p>Each command copies component source into <code>src/components/ui/</code>. You own this code.</p>
+  </div>
+
+  <div class="subsection">
+    <h3>Install Lucide Icons</h3>
+    <p>shadcn/ui uses Lucide for all icons. Install the package:</p>
+    <pre>npm install lucide-react</pre>
+    <p>Use icons in any component:</p>
+    <pre><span class="c">// Any component file</span>
+<span class="k">import</span> { ArrowRight, Check, Copy, Mail } <span class="k">from</span> <span class="s">'lucide-react'</span>
+
+<span class="k">export default function</span> <span class="fn">Demo</span>() {
+  <span class="k">return</span> (
+    &lt;div&gt;
+      &lt;Mail className=<span class="s">"h-4 w-4"</span> /&gt;
+      &lt;ArrowRight className=<span class="s">"h-5 w-5 text-gray-500"</span> /&gt;
+      &lt;Check className=<span class="s">"h-4 w-4 text-green-500"</span> /&gt;
+    &lt;/div&gt;
+  )
+}</pre>
+    <p>Browse all icons at <a href="https://lucide.dev" style="color:var(--g900);font-weight:500;text-decoration:underline;text-underline-offset:2px">lucide.dev</a>. Import by name — only the icons you use are bundled.</p>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="folder">
+  <div class="section-label">05 &mdash; Build UI First</div>
+  <h2>Folder Structure</h2>
+  <p>The structure for a production app. We will create this step by step.</p>
+
+  <div class="tree">src/
+  app/                    <span style="color:var(--g400)">file-based routing</span>
+    layout.tsx            <span style="color:var(--g400)">root layout (wraps all pages)</span>
+    page.tsx              <span style="color:var(--g400)">home page (/)</span>
+    globals.css           <span style="color:var(--g400)">Tailwind + design tokens</span>
+    <span class="d">(auth)/</span>               <span style="color:var(--g400)">route group (no URL segment)</span>
+      <span class="d">login/</span>page.tsx
+      <span class="d">signup/</span>page.tsx
+    <span class="d">(dashboard)/</span>          <span style="color:var(--g400)">protected pages</span>
+      layout.tsx
+      <span class="d">dashboard/</span>page.tsx
+      <span class="d">settings/</span>page.tsx
+  <span class="d">components/</span>
+    <span class="d">ui/</span>                  <span style="color:var(--g400)">shadcn components (auto)</span>
+    navbar.tsx
+    sidebar.tsx
+  <span class="d">lib/</span>
+    utils.ts              <span style="color:var(--g400)">cn() helper, utilities</span>
+  middleware.ts            <span style="color:var(--g400)">runs before every request</span></div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="pages">
+  <div class="section-label">06 &mdash; Build UI First</div>
+  <h2>Build Pages</h2>
+  <p>Create actual pages with content. No backend — just hardcoded data for now.</p>
+
+  <div class="subsection">
+    <h3>Home Page</h3>
+    <pre><span class="c">// src/app/page.tsx</span>
+<span class="k">export default function</span> <span class="fn">Home</span>() {
+  <span class="k">return</span> (
+    &lt;main className=<span class="s">"flex min-h-screen items-center justify-center"</span>&gt;
+      &lt;div className=<span class="s">"text-center"</span>&gt;
+        &lt;h1 className=<span class="s">"text-4xl font-bold"</span>&gt;Infinity&lt;/h1&gt;
+        &lt;p className=<span class="s">"mt-4 text-gray-500"</span>&gt;Build something great.&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/main&gt;
+  )
+}</pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Login Page (static, no auth yet)</h3>
+    <pre><span class="c">// src/app/(auth)/login/page.tsx</span>
+<span class="s">'use client'</span>
+<span class="k">import</span> { Button } <span class="k">from</span> <span class="s">'@/components/ui/button'</span>
+<span class="k">import</span> { Input } <span class="k">from</span> <span class="s">'@/components/ui/input'</span>
+<span class="k">import</span> { Card, CardContent, CardHeader, CardTitle } <span class="k">from</span> <span class="s">'@/components/ui/card'</span>
+
+<span class="k">export default function</span> <span class="fn">LoginPage</span>() {
+  <span class="k">return</span> (
+    &lt;div className=<span class="s">"flex min-h-screen items-center justify-center"</span>&gt;
+      &lt;Card className=<span class="s">"w-full max-w-sm"</span>&gt;
+        &lt;CardHeader&gt;
+          &lt;CardTitle&gt;Sign In&lt;/CardTitle&gt;
+        &lt;/CardHeader&gt;
+        &lt;CardContent className=<span class="s">"space-y-4"</span>&gt;
+          &lt;Input type=<span class="s">"email"</span> placeholder=<span class="s">"Email"</span> /&gt;
+          &lt;Input type=<span class="s">"password"</span> placeholder=<span class="s">"Password"</span> /&gt;
+          &lt;Button className=<span class="s">"w-full"</span>&gt;Sign In&lt;/Button&gt;
+          &lt;Button variant=<span class="s">"outline"</span> className=<span class="s">"w-full"</span>&gt;Google&lt;/Button&gt;
+        &lt;/CardContent&gt;
+      &lt;/Card&gt;
+    &lt;/div&gt;
+  )
+}</pre>
+    <p>This is a <strong>static UI</strong>. The buttons don't do anything yet. That is fine. We just want to see the page.</p>
+  </div>
+
+  <div class="subsection">
+    <h3>Dashboard Page (static)</h3>
+    <pre><span class="c">// src/app/(dashboard)/dashboard/page.tsx</span>
+<span class="k">export default function</span> <span class="fn">Dashboard</span>() {
+  <span class="k">return</span> (
+    &lt;div className=<span class="s">"p-8"</span>&gt;
+      &lt;h1 className=<span class="s">"text-2xl font-bold"</span>&gt;Dashboard&lt;/h1&gt;
+      &lt;p className=<span class="s">"mt-2 text-gray-500"</span>&gt;Welcome back.&lt;/p&gt;
+
+      &lt;div className=<span class="s">"mt-8 grid grid-cols-3 gap-4"</span>&gt;
+        &lt;div className=<span class="s">"rounded-lg border p-4"</span>&gt;
+          &lt;p className=<span class="s">"text-sm text-gray-400"</span>&gt;Projects&lt;/p&gt;
+          &lt;p className=<span class="s">"text-2xl font-bold"</span>&gt;12&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div className=<span class="s">"rounded-lg border p-4"</span>&gt;
+          &lt;p className=<span class="s">"text-sm text-gray-400"</span>&gt;Active&lt;/p&gt;
+          &lt;p className=<span class="s">"text-2xl font-bold"</span>&gt;5&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div className=<span class="s">"rounded-lg border p-4"</span>&gt;
+          &lt;p className=<span class="s">"text-sm text-gray-400"</span>&gt;Revenue&lt;/p&gt;
+          &lt;p className=<span class="s">"text-2xl font-bold"</span>&gt;$2.4k&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}</pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Test It</h3>
+    <pre>npm run dev
+<span class="c"># Visit http://localhost:3000         → Home page</span>
+<span class="c"># Visit http://localhost:3000/login    → Login page</span>
+<span class="c"># Visit http://localhost:3000/dashboard → Dashboard page</span>
+<span class="c">#</span>
+<span class="c"># All three pages work. No backend. Just UI.</span></pre>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="components">
+  <div class="section-label">07 &mdash; Build UI First</div>
+  <h2>Build Components</h2>
+  <p>Extract reusable pieces from your pages into components.</p>
+
+  <div class="subsection">
+    <h3>Navbar Component</h3>
+    <pre><span class="c">// src/components/navbar.tsx</span>
+<span class="k">import</span> Link <span class="k">from</span> <span class="s">'next/link'</span>
+<span class="k">import</span> { Infinity <span class="k">as</span> InfinityIcon, LayoutDashboard, LogIn } <span class="k">from</span> <span class="s">'lucide-react'</span>
+
+<span class="k">export function</span> <span class="fn">Navbar</span>() {
+  <span class="k">return</span> (
+    &lt;nav className=<span class="s">"flex items-center justify-between border-b px-6 py-3"</span>&gt;
+      &lt;Link href=<span class="s">"/"</span> className=<span class="s">"flex items-center gap-2 text-lg font-bold"</span>&gt;
+        &lt;InfinityIcon className=<span class="s">"h-5 w-5"</span> /&gt;
+        Infinity
+      &lt;/Link&gt;
+      &lt;div className=<span class="s">"flex gap-4 text-sm"</span>&gt;
+        &lt;Link href=<span class="s">"/dashboard"</span> className=<span class="s">"flex items-center gap-1 hover:text-gray-500"</span>&gt;
+          &lt;LayoutDashboard className=<span class="s">"h-4 w-4"</span> /&gt; Dashboard
+        &lt;/Link&gt;
+        &lt;Link href=<span class="s">"/login"</span> className=<span class="s">"flex items-center gap-1 hover:text-gray-500"</span>&gt;
+          &lt;LogIn className=<span class="s">"h-4 w-4"</span> /&gt; Login
+        &lt;/Link&gt;
+      &lt;/div&gt;
+    &lt;/nav&gt;
+  )
+}</pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Add Navbar to Layout</h3>
+    <pre><span class="c">// src/app/layout.tsx</span>
+<span class="k">import</span> { Navbar } <span class="k">from</span> <span class="s">'@/components/navbar'</span>
+
+<span class="k">export default function</span> <span class="fn">RootLayout</span>({ children }) {
+  <span class="k">return</span> (
+    &lt;html lang=<span class="s">"en"</span>&gt;
+      &lt;body&gt;
+        &lt;Navbar /&gt;
+        {children}
+      &lt;/body&gt;
+    &lt;/html&gt;
+  )
+}</pre>
+  </div>
+
+  <div class="callout">
+    <h5>The pattern</h5>
+    <p>Build it in the page first. When you see it repeated or it gets complex, extract it to a component. Don't over-abstract early.</p>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="styling">
+  <div class="section-label">08 &mdash; Build UI First</div>
+  <h2>Styling &amp; Design Tokens</h2>
+  <p>Use Tailwind classes and the Infinity design tokens. Keep it minimal.</p>
+
+  <div class="subsection">
+    <h3>Design Tokens (add to globals.css)</h3>
+    <pre><span class="c">/* src/app/globals.css */</span>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 7%;
+    --card: 0 0% 98%;
+    --border: 0 0% 90%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --primary: 0 0% 7%;
+    --primary-foreground: 0 0% 98%;
+    --radius: 0.5rem;
+  }
+}</pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Rules</h3>
+    <ul>
+      <li>Use Tailwind classes. No inline styles.</li>
+      <li>Use the <code>cn()</code> utility for conditional classes.</li>
+      <li>Stick to the grayscale palette. No random colors.</li>
+      <li>Spacing in multiples of 4px (4, 8, 12, 16, 20, 24, 32).</li>
+      <li>Use Lucide icons. Size with <code>h-4 w-4</code> (default), <code>h-5 w-5</code>, etc.</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- ADD BACKEND                                                   -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="divider"></div>
+<section class="section" id="github">
+  <div class="section-label">09 &mdash; Add Backend</div>
+  <h2>GitHub Repository</h2>
+  <p>Now that the UI works, save it to GitHub.</p>
+
+  <div class="step"><div class="step-n">1</div><div class="step-b"><strong>Create repo</strong><p>On GitHub, create a <strong>private</strong> repository: <code>ChrisshinMC/infinity</code>. Add a README and the <code>Node</code> .gitignore template.</p></div></div>
+  <div class="step"><div class="step-n">2</div><div class="step-b"><strong>Push your code</strong></div></div>
+  <pre><span class="c"># In your project folder</span>
+git init
+git add .
+git commit -m <span class="s">"Initial UI: home, login, dashboard pages"</span>
+git remote add origin https://github.com/ChrisshinMC/infinity.git
+git branch -M main
+git push -u origin main</pre>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="supabase">
+  <div class="section-label">10 &mdash; Add Backend</div>
+  <h2>Supabase (Database + Auth)</h2>
+  <p>Now we connect the backend. Supabase gives us a database and authentication.</p>
+
+  <div class="step"><div class="step-n">1</div><div class="step-b"><strong>Create project</strong><p>Go to <code>supabase.com</code>. Create a project named <code>infinity</code>. Choose a region close to your users.</p></div></div>
+  <div class="step"><div class="step-n">2</div><div class="step-b"><strong>Get API keys</strong><p>Project Settings &rarr; API. Copy the <strong>anon key</strong> (frontend) and <strong>service role key</strong> (server-only).</p></div></div>
+  <div class="step"><div class="step-n">3</div><div class="step-b"><strong>Get connection string</strong><p>Settings &rarr; Database. Copy the pooler connection string.</p></div></div>
+  <div class="step"><div class="step-n">4</div><div class="step-b"><strong>Enable auth</strong><p>Authentication &rarr; Providers. Enable Email/Password. We will add Google OAuth next.</p></div></div>
+  <div class="callout">
+    <h5>Row Level Security</h5>
+    <p>Enable RLS on every table. Our project was created without automatic RLS. Always use RLS in production.</p>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="gcp">
+  <div class="section-label">11 &mdash; Add Backend</div>
+  <h2>Google OAuth</h2>
+  <p>Enable "Sign in with Google" in your app.</p>
+
+  <div class="step"><div class="step-n">1</div><div class="step-b"><strong>Create GCP project</strong><p>Go to <code>console.cloud.google.com</code>. Create a project named <code>Infinity</code>.</p></div></div>
+  <div class="step"><div class="step-n">2</div><div class="step-b"><strong>OAuth consent screen</strong><p>APIs &amp; Services &rarr; OAuth consent screen. Add domain. Scopes: <code>email</code>, <code>profile</code>, <code>openid</code>.</p></div></div>
+  <div class="step"><div class="step-n">3</div><div class="step-b"><strong>Create credentials</strong><p>APIs &amp; Services &rarr; Credentials &rarr; OAuth client ID &rarr; Web application.</p></div></div>
+
+  <table class="table" style="margin-top:var(--md)">
+    <thead><tr><th>Setting</th><th>Values</th></tr></thead>
+    <tbody>
+      <tr><td>Authorized origins</td><td><code>http://localhost:3000</code></td></tr>
+      <tr><td>Redirect URIs</td><td><code>http://localhost:3000/api/auth/callback/google</code></td></tr>
+    </tbody>
+  </table>
+  <p>Copy the <strong>Client ID</strong> and <strong>Client Secret</strong>.</p>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="stripe">
+  <div class="section-label">12 &mdash; Add Backend</div>
+  <h2>Stripe (Payments)</h2>
+  <p>Connect Stripe for subscriptions and payments.</p>
+
+  <div class="step"><div class="step-n">1</div><div class="step-b"><strong>Create account</strong><p>Go to <code>stripe.com</code>. You start in test mode.</p></div></div>
+  <div class="step"><div class="step-n">2</div><div class="step-b"><strong>Get API keys</strong><p>Developers &rarr; API keys. Copy publishable (<code>pk_test_...</code>) and secret (<code>sk_test_...</code>) keys.</p></div></div>
+  <div class="step"><div class="step-n">3</div><div class="step-b"><strong>Create products</strong><p>Products &rarr; Add subscription plans. Each gets a Price ID.</p></div></div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="env">
+  <div class="section-label">13 &mdash; Add Backend</div>
+  <h2>Environment Variables</h2>
+  <p>Create <code>.env.local</code> in your project root. Never commit this file.</p>
+
+  <pre><span class="c"># Supabase</span>
+<span class="fn">NEXT_PUBLIC_SUPABASE_URL</span>=https://your-project.supabase.co
+<span class="fn">NEXT_PUBLIC_SUPABASE_ANON_KEY</span>=eyJhbG...your-anon-key
+<span class="fn">SUPABASE_SERVICE_ROLE_KEY</span>=eyJhbG...your-service-role-key
+<span class="fn">DATABASE_URL</span>=postgresql://postgres.xxx:password@aws-0-region.pooler.supabase.com:6543/postgres
+
+<span class="c"># Google OAuth</span>
+<span class="fn">GOOGLE_CLIENT_ID</span>=your-client-id.apps.googleusercontent.com
+<span class="fn">GOOGLE_CLIENT_SECRET</span>=your-client-secret
+
+<span class="c"># Stripe</span>
+<span class="fn">NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</span>=pk_test_...
+<span class="fn">STRIPE_SECRET_KEY</span>=sk_test_...
+<span class="fn">STRIPE_WEBHOOK_SECRET</span>=whsec_...
+
+<span class="c"># App</span>
+<span class="fn">NEXT_PUBLIC_APP_URL</span>=http://localhost:3000</pre>
+
+  <div class="callout">
+    <h5>Naming rules</h5>
+    <p><code>NEXT_PUBLIC_</code> = exposed to browser. Never put secrets there.</p>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="auth">
+  <div class="section-label">14 &mdash; Add Backend</div>
+  <h2>Authentication</h2>
+  <p>Wire up Supabase auth to the login page and protect routes.</p>
+
+  <div class="subsection">
+    <h3>Supabase Client</h3>
+    <pre><span class="c">// src/lib/supabase.ts</span>
+<span class="k">import</span> { createClient } <span class="k">from</span> <span class="s">'@supabase/supabase-js'</span>
+
+<span class="k">export const</span> supabase = createClient(
+  process.env.<span class="fn">NEXT_PUBLIC_SUPABASE_URL</span>!,
+  process.env.<span class="fn">NEXT_PUBLIC_SUPABASE_ANON_KEY</span>!
+)</pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Middleware (protects routes)</h3>
+    <pre><span class="c">// src/middleware.ts</span>
+<span class="k">import</span> { createServerClient } <span class="k">from</span> <span class="s">'@supabase/ssr'</span>
+<span class="k">import</span> { NextResponse } <span class="k">from</span> <span class="s">'next/server'</span>
+
+<span class="k">export async function</span> <span class="fn">middleware</span>(request) {
+  <span class="k">let</span> response = NextResponse.next({ request })
+
+  <span class="k">const</span> supabase = createServerClient(
+    process.env.<span class="fn">NEXT_PUBLIC_SUPABASE_URL</span>!,
+    process.env.<span class="fn">NEXT_PUBLIC_SUPABASE_ANON_KEY</span>!,
+    { cookies: { getAll() { <span class="k">return</span> request.cookies.getAll() },
+      setAll(c) { c.forEach(({ name, value }) =&gt; request.cookies.set(name, value))
+        response = NextResponse.next({ request })
+        c.forEach(({ name, value, options }) =&gt; response.cookies.set(name, value, options)) }}}
+  )
+
+  <span class="k">const</span> { data: { user } } = <span class="k">await</span> supabase.auth.getUser()
+
+  <span class="k">if</span> (!user && request.nextUrl.pathname.startsWith(<span class="s">'/dashboard'</span>)) {
+    <span class="k">return</span> NextResponse.redirect(<span class="k">new</span> URL(<span class="s">'/login'</span>, request.url))
+  }
+
+  <span class="k">return</span> response
+}
+
+<span class="k">export const</span> config = { matcher: [<span class="s">'/((?!_next|favicon.ico|.*\\.(?:svg|png|jpg)$).*)'</span>] }</pre>
+  </div>
+
+  <div class="subsection">
+    <h3>Wire Up Login Page</h3>
+    <pre><span class="c">// src/app/(auth)/login/page.tsx</span>
+<span class="s">'use client'</span>
+<span class="k">import</span> { useState } <span class="k">from</span> <span class="s">'react'</span>
+<span class="k">import</span> { useRouter } <span class="k">from</span> <span class="s">'next/navigation'</span>
+<span class="k">import</span> { supabase } <span class="k">from</span> <span class="s">'@/lib/supabase'</span>
+<span class="k">import</span> { Button } <span class="k">from</span> <span class="s">'@/components/ui/button'</span>
+<span class="k">import</span> { Input } <span class="k">from</span> <span class="s">'@/components/ui/input'</span>
+<span class="k">import</span> { Card, CardContent, CardHeader, CardTitle } <span class="k">from</span> <span class="s">'@/components/ui/card'</span>
+
+<span class="k">export default function</span> <span class="fn">LoginPage</span>() {
+  <span class="k">const</span> [email, setEmail] = useState(<span class="s">''</span>)
+  <span class="k">const</span> [password, setPassword] = useState(<span class="s">''</span>)
+  <span class="k">const</span> router = useRouter()
+
+  <span class="k">const</span> <span class="fn">handleLogin</span> = <span class="k">async</span> (e) =&gt; {
+    e.preventDefault()
+    <span class="k">const</span> { error } = <span class="k">await</span> supabase.auth.signInWithPassword({ email, password })
+    <span class="k">if</span> (!error) router.push(<span class="s">'/dashboard'</span>)
+  }
+
+  <span class="k">const</span> <span class="fn">handleGoogle</span> = <span class="k">async</span> () =&gt; {
+    <span class="k">await</span> supabase.auth.signInWithOAuth({
+      provider: <span class="s">'google'</span>,
+      options: { redirectTo: <span class="s">`${window.location.origin}/api/auth/callback/google`</span> }
+    })
+  }
+
+  <span class="k">return</span> (
+    &lt;div className=<span class="s">"flex min-h-screen items-center justify-center"</span>&gt;
+      &lt;Card className=<span class="s">"w-full max-w-sm"</span>&gt;
+        &lt;CardHeader&gt;&lt;CardTitle&gt;Sign In&lt;/CardTitle&gt;&lt;/CardHeader&gt;
+        &lt;CardContent&gt;
+          &lt;form onSubmit={handleLogin} className=<span class="s">"space-y-4"</span>&gt;
+            &lt;Input type=<span class="s">"email"</span> placeholder=<span class="s">"Email"</span> onChange={e =&gt; setEmail(e.target.value)} /&gt;
+            &lt;Input type=<span class="s">"password"</span> placeholder=<span class="s">"Password"</span> onChange={e =&gt; setPassword(e.target.value)} /&gt;
+            &lt;Button type=<span class="s">"submit"</span> className=<span class="s">"w-full"</span>&gt;Sign In&lt;/Button&gt;
+            &lt;Button type=<span class="s">"button"</span> variant=<span class="s">"outline"</span> className=<span class="s">"w-full"</span> onClick={handleGoogle}&gt;Google&lt;/Button&gt;
+          &lt;/form&gt;
+        &lt;/CardContent&gt;
+      &lt;/Card&gt;
+    &lt;/div&gt;
+  )
+}</pre>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- DEPLOY                                                        -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="divider"></div>
+<section class="section" id="cloudflare">
+  <div class="section-label">15 &mdash; Deploy</div>
+  <h2>Cloudflare DNS</h2>
+  <p>Set up DNS so your domain points to Vercel.</p>
+
+  <div class="step"><div class="step-n">1</div><div class="step-b"><strong>Add site</strong><p>Go to <code>dash.cloudflare.com</code>. Enter <code>example.com</code>. Free plan.</p></div></div>
+  <div class="step"><div class="step-n">2</div><div class="step-b"><strong>Copy nameservers</strong><p>Put these into GoDaddy (or your registrar).</p></div></div>
+
+  <h4>DNS Records</h4>
+  <table class="table">
+    <thead><tr><th>Type</th><th>Name</th><th>Content</th><th>Proxy</th></tr></thead>
+    <tbody>
+      <tr><td>A</td><td>@</td><td><code>76.76.21.21</code></td><td>Proxied</td></tr>
+      <tr><td>CNAME</td><td>www</td><td><code>cname.vercel-dns.com</code></td><td>Proxied</td></tr>
+    </tbody>
+  </table>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="vercel">
+  <div class="section-label">16 &mdash; Deploy</div>
+  <h2>Vercel Hosting</h2>
+  <p>Deploy your app to production.</p>
+
+  <div class="step"><div class="step-n">1</div><div class="step-b"><strong>Import repo</strong><p>Go to <code>vercel.com</code>. Add New &rarr; Project &rarr; Select <code>ChrisshinMC/infinity</code>. Vercel auto-detects Next.js.</p></div></div>
+  <div class="step"><div class="step-n">2</div><div class="step-b"><strong>Add environment variables</strong><p>Copy all values from your <code>.env.local</code> into Vercel's Environment Variables settings.</p></div></div>
+  <div class="step"><div class="step-n">3</div><div class="step-b"><strong>Add domain</strong><p>Settings &rarr; Domains. Add <code>example.com</code> and <code>www.example.com</code>.</p></div></div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="deploy">
+  <div class="section-label">17 &mdash; Deploy</div>
+  <h2>Deploy to Production</h2>
+  <p>Push your code. Vercel auto-deploys.</p>
+
+  <pre><span class="c"># Push to GitHub</span>
+git add .
+git commit -m <span class="s">"feat: full app with auth and payments"</span>
+git push origin main
+
+<span class="c"># Vercel auto-deploys within ~60 seconds</span>
+<span class="c"># Visit https://example.com</span></pre>
+
+  <div class="callout">
+    <h5>That's it</h5>
+    <p>Every push to <code>main</code> triggers a production deployment. Preview deployments happen automatically on pull requests.</p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- AI & TOOLS                                                    -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="divider"></div>
+<section class="section" id="ai-tools">
+  <div class="section-label">18 &mdash; AI &amp; Tools</div>
+  <h2>AI Development Tools</h2>
+  <p>Set up AI tools to build faster with consistent quality.</p>
+
+  <div class="cards cards-2" style="margin-top:var(--xl)">
+    <div class="card"><h4>Claude Code</h4><p>CLI coding tool. Reads your codebase and generates code.</p></div>
+    <div class="card"><h4>Cursor</h4><p>AI-native code editor. Inline edits, chat, autocomplete.</p></div>
+    <div class="card"><h4>OpenAI Codex</h4><p>CLI tool for scaffolding and repetitive tasks.</p></div>
+    <div class="card"><h4>ChatGPT</h4><p>Research, debugging help, architecture decisions.</p></div>
+  </div>
+
+  <div class="subsection" style="margin-top:var(--xl)">
+    <h3>AI Context File</h3>
+    <p>Create <code>CLAUDE.md</code> in your project root. AI tools read this at session start.</p>
+    <div class="prompt-box">
+      <pre><span class="c"># CLAUDE.md</span>
+<span class="c">## Stack</span>
+- Next.js 14 (App Router, TypeScript)
+- shadcn/ui + Tailwind CSS
+- Lucide icons (<span class="fn">lucide-react</span>)
+- Supabase (PostgreSQL + Auth)
+- Stripe (payments)
+- Deployed on Vercel
+
+<span class="c">## Rules</span>
+- Server Components by default. Add 'use client' only when needed.
+- Never store secrets in client-side code.
+- Use <span class="fn">@/</span> import alias.
+- All database tables must have RLS enabled.
+- Run <span class="fn">npm run lint</span> before committing.</pre>
+    </div>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="mcp">
+  <div class="section-label">19 &mdash; AI &amp; Tools</div>
+  <h2>MCP Servers</h2>
+  <p>MCP (Model Context Protocol) servers give AI tools access to external services. Install once, the AI uses them automatically.</p>
+
+  <div class="subsection" id="mcp-ctx7">
+    <h3>Context7 &mdash; Live Library Docs</h3>
+    <p>Pulls up-to-date documentation into your AI session. Solves stale training data. An <a href="https://context7.com" style="color:var(--g900);font-weight:500;text-decoration:underline;text-underline-offset:2px">Upstash</a> project.</p>
+
+    <h4>Quick Setup</h4>
+    <pre>npx ctx7 setup</pre>
+    <p>Auto-detects your environment and configures everything.</p>
+
+    <h4>Per-Client Setup</h4>
+    <table class="table">
+      <thead><tr><th>Client</th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Claude Code</strong></td><td><code>npx ctx7 setup --claude</code></td></tr>
+        <tr><td><strong>Cursor</strong></td><td><code>npx ctx7 setup --cursor</code></td></tr>
+        <tr><td><strong>opencode</strong></td><td><code>npx ctx7 setup --opencode</code></td></tr>
+        <tr><td><strong>Codex</strong></td><td><code>npx ctx7 setup --codex</code></td></tr>
+      </tbody>
+    </table>
+
+    <h4>Manual Config</h4>
+    <div class="prompt-box">
+      <pre>{
+  <span class="s">"mcpServers"</span>: {
+    <span class="s">"context7"</span>: {
+      <span class="s">"command"</span>: <span class="s">"npx"</span>,
+      <span class="s">"args"</span>: [<span class="s">"-y"</span>, <span class="s">"@upstash/context7-mcp@latest"</span>]
+    }
+  }
+}</pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Other MCP Servers</h3>
+    <table class="table">
+      <thead><tr><th>Server</th><th>What It Does</th><th>Install</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Supabase MCP</strong></td><td>Database access, migrations, inspection</td><td><code>npm install -g @supabase/mcp-server</code></td></tr>
+        <tr><td><strong>Playwright MCP</strong></td><td>Browser testing, screenshots, UI debugging</td><td><code>npm install -g @playwright/mcp</code></td></tr>
+        <tr><td><strong>GitHub MCP</strong></td><td>Issues, PRs, code review</td><td><code>npm install -g @github/mcp-server</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="skills">
+  <div class="section-label">20 &mdash; AI &amp; Tools</div>
+  <h2>Skills</h2>
+  <p>Pre-built workflows AI tools can load. They tell the AI how to do specific tasks.</p>
+  <table class="table" style="margin-top:var(--xl)">
+    <thead><tr><th>Skill</th><th>When to Use</th></tr></thead>
+    <tbody>
+      <tr><td><strong>git-workflow-and-versioning</strong></td><td>Commits, branches, releases</td></tr>
+      <tr><td><strong>ponytail</strong></td><td>Force minimal solutions (YAGNI)</td></tr>
+      <tr><td><strong>security-audit</strong></td><td>Find security bugs before shipping</td></tr>
+      <tr><td><strong>webapp-testing</strong></td><td>Test frontend with Playwright</td></tr>
+      <tr><td><strong>accessibility-a11y</strong></td><td>WCAG compliance</td></tr>
+    </tbody>
+  </table>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="rules">
+  <div class="section-label">21 &mdash; AI &amp; Tools</div>
+  <h2>Rules &amp; Conventions</h2>
+  <p>Add these to your context file. AI and humans follow the same rules.</p>
+
+  <div class="subsection">
+    <h4>Code Rules</h4>
+    <div class="prompt-box">
+      <pre><span class="c">## Code Rules</span>
+- TypeScript strict mode. No <span class="fn">any</span> types.
+- Server Components by default.
+- <span class="fn">cn()</span> for class merging. No inline styles.
+- Components in <span class="fn">src/components/</span>. Utils in <span class="fn">src/lib/</span>.
+- One component per file. Named exports for libs.
+- Icons from <span class="fn">lucide-react</span> only. No other icon packages.</pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Git Rules</h4>
+    <div class="prompt-box">
+      <pre><span class="c">## Git Rules</span>
+- Messages: <span class="s">"type: description"</span> (feat, fix, docs, refactor)
+- Never commit <span class="fn">.env.local</span> or <span class="fn">node_modules</span>.
+- One logical change per commit.
+- Branch per feature: <span class="fn">feat/login</span>, <span class="fn">fix/auth-redirect</span>.</pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Security Rules</h4>
+    <div class="prompt-box">
+      <pre><span class="c">## Security Rules</span>
+- Never expose <span class="fn">SUPABASE_SERVICE_ROLE_KEY</span> to client.
+- Never expose <span class="fn">STRIPE_SECRET_KEY</span> to client.
+- All tables must have RLS policies.
+- Validate input server-side.
+- HTTPS only in production.</pre>
+    </div>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="prompts">
+  <div class="section-label">22 &mdash; AI &amp; Tools</div>
+  <h2>AI Prompts</h2>
+  <p>Copy, paste, customize.</p>
+
+  <div class="subsection">
+    <h3>Scaffold a Feature</h3>
+    <div class="prompt-box">
+      <pre>Build a settings page with:
+1. Profile section (update name, email)
+2. Subscription section (current Stripe plan)
+3. Danger zone (account deletion)
+
+Use Supabase for user data, Stripe for subscription.
+Protect with auth middleware.
+Use shadcn/ui components. Follow Infinity Design System.
+Server Component where possible.</pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Create an API Route</h3>
+    <div class="prompt-box">
+      <pre>Create a Next.js API route at <span class="fn">/api/subscribe</span> that:
+1. Accepts POST with <span class="fn">priceId</span>
+2. Gets authenticated user from Supabase
+3. Creates Stripe Checkout session
+4. Returns checkout URL
+
+Handle errors. Return proper HTTP status codes.</pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Debug an Issue</h3>
+    <div class="prompt-box">
+      <pre>Login works in dev but 400 error in production:
+"invalid_grant: code challenge mismatch"
+
+Debug step by step:
+1. Check Supabase auth config
+2. Verify env vars match between .env.local and Vercel
+3. Check redirect URIs in GCP
+4. Check middleware for issues
+5. Provide the fix</pre>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Code Review</h3>
+    <div class="prompt-box">
+      <pre>Review for:
+1. Security (SQL injection, XSS, exposed secrets)
+2. Performance (re-renders, missing indexes)
+3. TypeScript errors or <span class="fn">any</span> types
+4. Accessibility (missing labels, keyboard traps)
+5. Design system adherence
+
+Flag severity (critical/warning/info). Provide fixes.</pre>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- REFERENCE                                                     -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="divider"></div>
+<section class="section" id="before">
+  <div class="section-label">23 &mdash; Reference</div>
+  <h2>Before You Build (for AI)</h2>
+  <p>Prepare these so AI tools stay aligned with requirements.</p>
+  <div class="cards cards-2">
+    <div class="card"><h4>1. Write a PRD</h4><p>Features, user flows, screens, data models. Source of truth.</p></div>
+    <div class="card"><h4>2. Design Schema</h4><p>Tables, columns, relationships, RLS. Use dbdiagram.io.</p></div>
+    <div class="card"><h4>3. API Contract</h4><p>Endpoints and responses. Agree before coding.</p></div>
+    <div class="card"><h4>4. Plan Auth Flow</h4><p>Every scenario: signup, signin, reset, OAuth, refresh.</p></div>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="commands">
+  <div class="section-label">24 &mdash; Reference</div>
+  <h2>Commands</h2>
+
+  <div class="subsection">
+    <h4>Daily Development</h4>
+    <pre>npm run dev              <span class="c"># start dev server</span>
+npx tsc --noEmit         <span class="c"># check types</span>
+npm run lint             <span class="c"># lint code</span>
+npx shadcn@latest add X  <span class="c"># add component</span></pre>
+  </div>
+
+  <div class="subsection">
+    <h4>Git</h4>
+    <pre>git status && git diff
+git add . && git commit -m <span class="s">"feat: description"</span>
+git push origin main</pre>
+  </div>
+
+  <div class="subsection">
+    <h4>Supabase CLI</h4>
+    <pre>npm install -g supabase
+supabase login
+supabase link --project-ref your-ref
+supabase db push
+supabase gen types typescript --local > src/types/supabase.ts</pre>
+  </div>
+</section>
+
+
+<div class="divider"></div>
+<section class="section" id="troubleshooting">
+  <div class="section-label">25 &mdash; Reference</div>
+  <h2>Troubleshooting</h2>
+  <table class="table">
+    <thead><tr><th>Problem</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td><code>'node' is not recognized</code></td><td>Reinstall Node.js. Restart terminal.</td></tr>
+      <tr><td><code>Module not found</code></td><td>Run <code>npm install</code>.</td></tr>
+      <tr><td>Vercel 404</td><td>Push Next.js code to main branch.</td></tr>
+      <tr><td>Supabase invalid key</td><td>Check <code>.env.local</code>. Restart dev server.</td></tr>
+      <tr><td>Google sign-in fails</td><td>Redirect URI mismatch. Check GCP.</td></tr>
+      <tr><td>Domain not resolving</td><td>Wait 24-48h. Check <code>dnschecker.org</code>.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+
+<footer style="text-align:center;padding:var(--2xl) 0 var(--xl);color:var(--g400);font-size:12px">
+  Infinity Project Guide
+</footer>
+
+</main>
+</div>
+
+<script>
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebarOverlay').classList.toggle('open')}
+(function(){
+  const links=document.querySelectorAll('.sidebar-link:not(.sub)');
+  const sections=[];
+  links.forEach(l=>{const id=l.getAttribute('href').slice(1);const el=document.getElementById(id);if(el)sections.push({el,link:l})});
+  function update(){let cur=sections[0];for(const s of sections){if(s.el.getBoundingClientRect().top<=120)cur=s}links.forEach(l=>l.classList.remove('active'));if(cur)cur.link.classList.add('active')}
+  window.addEventListener('scroll',update,{passive:true});update()
+})();
+document.querySelectorAll('pre').forEach(pre=>{
+  const btn=document.createElement('button');
+  btn.className='copy-btn';
+  btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';
+  btn.addEventListener('click',()=>{
+    const text=pre.innerText.replace(/^Copy\n?/,'').trim();
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied';
+      btn.classList.add('copied');
+      setTimeout(()=>{btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy';btn.classList.remove('copied')},1500)
+  });
+  pre.appendChild(btn);
+});
+</script>
+
+</body>
+</html>
